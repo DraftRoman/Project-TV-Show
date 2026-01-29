@@ -3,9 +3,10 @@
 > This project is adapted for Migracode Barcelona learners based on a template by CodeYourFuture.
 
 The goals of level 0 are to:
-* Create a GitHub repository with the starter scaffolding in-place.
-* Deploy it to Netlify.
-* Make sure whenever you push changes your Netlify site will be updated.
+
+- Create a GitHub repository with the starter scaffolding in-place.
+- Deploy it to Netlify.
+- Make sure whenever you push changes your Netlify site will be updated.
 
 > [!WARNING]  
 > Unlike other projects at MigraCode, you are not going to _fork_ this project, you're going to create a repository from a template repository.
@@ -41,7 +42,8 @@ The goals of level 0 are to:
 ## Completion criteria
 
 You have completed level 0 when:
-- [ ] You have a GitHub repository called `Project-TV-Show` which is not a fork of this repo.
-- [ ] The `index.html` page on your GitHub project contains your name and GitHub username.
-- [ ] Your project is deployed to Netlify at `mc-USERNAME-tv.netlify.app`.
-- [ ] Your deployed project has your name and GitHub username in its title.
+
+- [x] You have a GitHub repository called `Project-TV-Show` which is not a fork of this repo.
+- [x] The `index.html` page on your GitHub project contains your name and GitHub username.
+- [x] Your project is deployed to Netlify at `mc-USERNAME-tv.netlify.app`.
+- [x] Your deployed project has your name and GitHub username in its title.
