@@ -21,7 +21,7 @@ section {
   display: flex;
   flex-direction: column;
   margin: 10px;
-  max-width: 340px
+  width: 340px
 }
 .fi-title {
   font-size: 24px;
