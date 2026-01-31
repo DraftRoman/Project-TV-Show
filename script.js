@@ -8,27 +8,26 @@ function makePageForEpisodes(episodeList) {
   const rootElem = document.getElementById("root");
   rootElem.textContent = `Got ${episodeList.length} episode(s)`;
   const section = document.querySelector('.episode-list');
-  console.log(episodeList)
+  const template = document.getElementById("episode-template");
   for (let episode of episodeList) {
-    const divider = document.createElement('div');
-    divider.className = 'divider';
-    section.appendChild(divider);
-    const title_episode = document.createElement('h3');
-    title_episode.className = 'fi-title';
-    const episodeTitle = episode.name.length < 25 ? episode.name : `${episode.name.substring(0, 22)}...`;
-    title_episode.textContent = `${episodeTitle}\n${SxxExx(episode.season, episode.number)}`;
-    divider.appendChild(title_episode);
-    const img = document.createElement('img');
+    const newCard = template.content.cloneNode(true);
+    const titleElement = newCard.querySelector(".fi-title");
+    titleElement.textContent = `${formatEpisodeName(episode)} ${formatEpisodeNumber(episode)}`;
+    const img = newCard.querySelector('.episode-image');
     img.src = episode.image.medium;
-    divider.appendChild(img);
-    const summary = document.createElement('div');
-    summary.innerHTML = episode.summary;
-    summary.style.color = 'white';
-    divider.appendChild(summary);
+
+    const summaryElement = newCard.querySelector('.fi-summary');
+    summaryElement.innerHTML = episode.summary;
+    section.appendChild(newCard);
+
   }
 }
 
 window.onload = setup;
-function SxxExx(season, episode) {
-  return `S${season < 10 ? "0" : ""}${season}E${episode < 10 ? "0" : ""}${episode}`;
+function formatEpisodeNumber(episode) {
+  return `\nS${episode.season < 10 ? "0" : ""}${episode.season}E${episode.number < 10 ? "0" : ""}${episode.number}`;
+}
+function formatEpisodeName(episode) {
+  const maxLength = 25;
+  return episode.name.length < maxLength ? episode.name : `${episode.name.substring(0, maxLength - 3)}...`;
 }
