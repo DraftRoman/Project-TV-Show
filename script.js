@@ -1,32 +1,6 @@
 //You can edit ALL of the code here
 function setup() {
   const allEpisodes = getAllEpisodes();
-  const main = document.createElement('main');
-  main.className = 'main-content';
-  document.body.appendChild(main);
-  const header = document.createElement('header');
-  main.appendChild(header);
-  header.className = 'page-header';
-  header.style.textAlign = 'center';
-  const h1 = document.createElement('h1');
-  h1.textContent = 'TV Show Project';
-  h1.className = 'page-title';
-  header.appendChild(h1);
-  const p = document.createElement('p');
-  p.textContent = 'A collection of my favorite TV show episodes';
-  p.className = 'page-description';
-  header.appendChild(p);
-  const section = document.createElement('section');
-  section.className = 'episode-list'; 
-  main.appendChild(section);
-  const footer = document.createElement('footer');
-  footer.className = 'page-footer';
-  footer.innerHTML = 'The data has (originally) come from <a href="https://tvmaze.com/">TVMaze.com</a>';
-  footer.style.textAlign = 'center';
-  footer.style.color = 'gray';
-  main.appendChild(footer);
-
-
   makePageForEpisodes(allEpisodes);
 }
 

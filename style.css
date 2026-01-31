@@ -11,6 +11,9 @@ body {
 main {
   padding: 10px;
 }
+.page-header {
+  text-align: center;
+}
 section {
   display: flex;
   flex-wrap: wrap;
@@ -36,4 +39,8 @@ section {
 }
 .fi-title:hover {
   background-color: #7c7a7a;
+}
+.page-footer {
+  text-align: center;
+  color: gray;
 }
