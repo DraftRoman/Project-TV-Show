@@ -10,24 +10,24 @@ function makePageForEpisodes(episodeList) {
   const section = document.querySelector('.episode-list');
   const template = document.getElementById("episode-template");
   for (let episode of episodeList) {
+
+    const {name, season, number, summary} = episode;
+    const {medium} = episode.image
     const newCard = template.content.cloneNode(true);
-    const titleElement = newCard.querySelector(".fi-title");
-    titleElement.textContent = `${formatEpisodeName(episode)} ${formatEpisodeNumber(episode)}`;
-    const img = newCard.querySelector('.episode-image');
-    img.src = episode.image.medium;
 
-    const summaryElement = newCard.querySelector('.fi-summary');
-    summaryElement.innerHTML = episode.summary;
+    newCard.querySelector(".fi-title").textContent = `${formatEpisodeName(name)} ${formatEpisodeNumber(season,number)}`;
+    newCard.querySelector("img").src = medium;
+    newCard.querySelector(".fi-summary").innerHtml = summary;
+    
     section.appendChild(newCard);
-
   }
 }
 
 window.onload = setup;
-function formatEpisodeNumber(episode) {
-  return `\nS${episode.season < 10 ? "0" : ""}${episode.season}E${episode.number < 10 ? "0" : ""}${episode.number}`;
+function formatEpisodeNumber(season,number) {
+  return `\nS${season < 10 ? "0" : ""}${season}E${number < 10 ? "0" : ""}${number}`;
 }
-function formatEpisodeName(episode) {
+function formatEpisodeName(name) {
   const maxLength = 25;
-  return episode.name.length < maxLength ? episode.name : `${episode.name.substring(0, maxLength - 3)}...`;
+  return name.length < maxLength ? name : `${name.substring(0, maxLength - 3)}...`;
 }
