@@ -44,8 +44,18 @@ function filterEpisodes(episodeList,input){
           document.querySelector(".episode-list").append(newCard);
           
         }
-
   }
+}
+
+function allepisodesSelect(episodes){
+  const select = document.querySelector(".ep-select");
+  const optionClone = document.querySelector(".ep-select-option").cloneNode(true);
+  const options = episodes.map(element => {
+      const optionClone = document.querySelector(".ep-select-option").cloneNode(true);
+      optionClone.innerText = `${element.name}`;
+      return optionClone
+  });
+  select.append(...options);
 }
 
 function setup() {
@@ -56,6 +66,14 @@ function setup() {
   inputValue.addEventListener("keydown", () => {
     filterEpisodes(allEpisodes,inputValue.value);
   })
+  allepisodesSelect(allEpisodes);
+  
+  const selectOption = document.querySelector(".ep-select");
+  selectOption.addEventListener("change", (event) => {
+    onchange = (event) => {
+      filterEpisodes(allEpisodes,event.target.value);
+    }
+  });
 }
 
 window.onload = setup;
