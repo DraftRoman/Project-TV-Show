@@ -38,7 +38,7 @@ function filterEpisodes(episodeList,input){
         const {medium} = episode.image;
         const newCard = document.querySelector('#episode-template').content.cloneNode(true);
         const newdiv = document.createElement("div");
-        if((name.includes(input)) || (summary.includes(input))){
+        if((name.toUpperCase().includes(input.toUpperCase())) || (summary.toUpperCase().includes(input.toUpperCase()))){
           newCard.querySelector(".fi-title").textContent = `${formatEpisodeName(name)} ${formatEpisodeNumber(season,number)}`;
           newCard.querySelector("img").src = medium;
           newCard.querySelector(".fi-summary").innerHtml = summary;
