@@ -37,15 +37,14 @@ function filterEpisodes(episodeList,input){
         const {name, season, number, summary} = episode;
         const {medium} = episode.image;
         const newCard = document.querySelector('#episode-template').content.cloneNode(true);
-        const newdiv = document.createElement("div");
         if((name.toUpperCase().includes(input.toUpperCase())) || (summary.toUpperCase().includes(input.toUpperCase()))){
           newCard.querySelector(".fi-title").textContent = `${formatEpisodeName(name)} ${formatEpisodeNumber(season,number)}`;
           newCard.querySelector("img").src = medium;
           newCard.querySelector(".fi-summary").innerHtml = summary;
-          newdiv.append(newCard);
+          document.querySelector(".episode-list").append(newCard);
+          
         }
 
-      document.querySelector(".episode-list").append(newdiv);
   }
 }
 
@@ -57,6 +56,6 @@ function setup() {
   inputValue.addEventListener("keydown", () => {
     filterEpisodes(allEpisodes,inputValue.value);
   })
-
 }
+
 window.onload = setup;
