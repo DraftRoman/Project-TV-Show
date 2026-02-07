@@ -71,7 +71,11 @@ function setup() {
   const selectOption = document.querySelector(".ep-select");
   selectOption.addEventListener("change", (event) => {
     onchange = (event) => {
-      filterEpisodes(allEpisodes,event.target.value);
+      if(event.target.value == 'All Episodes'){
+        makePageForEpisodes(allEpisodes);
+      }else{
+        filterEpisodes(allEpisodes,event.target.value);
+      }
     }
   });
 }
