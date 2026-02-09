@@ -1,4 +1,6 @@
-function makePageForEpisodes(episodeList) {
+import { getData } from "./app.js";
+
+  function makePageForEpisodes(episodeList) {
   const rootElem = document.getElementById("root");
   rootElem.textContent = `Got ${episodeList.length} episode(s)`;
   const section = document.querySelector('.episode-list');
@@ -56,10 +58,9 @@ function allepisodesSelect(episodes){
       return optionClone
   });
   select.append(...options);
-}
-
-function setup() {
-  const allEpisodes = getAllEpisodes();
+} 
+async function setup() {
+  const allEpisodes = await getData();
   makePageForEpisodes(allEpisodes); 
 
   const inputValue = document.querySelector(".ep-search-input");
@@ -70,12 +71,10 @@ function setup() {
   
   const selectOption = document.querySelector(".ep-select");
   selectOption.addEventListener("change", (event) => {
-    onchange = (event) => {
-      if(event.target.value == 'All Episodes'){
-        makePageForEpisodes(allEpisodes);
-      }else{
-        filterEpisodes(allEpisodes,event.target.value);
-      }
+    if (event.target.value == 'All Episodes') {
+      makePageForEpisodes(allEpisodes);
+    }else{
+      filterEpisodes(allEpisodes,event.target.value);
     }
   });
 }
