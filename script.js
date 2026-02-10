@@ -1,82 +1,99 @@
 import { getData } from "./app.js";
 
-  function makePageForEpisodes(episodeList) {
+async function setup() {
+  const allEpisodes = await getData();
+  makePageForEpisodes(allEpisodes);
+  setupSearch(allEpisodes);
+  episodeSelector(allEpisodes);
+}
+
+function makePageForEpisodes(episodeList) {
   const rootElem = document.getElementById("root");
-  rootElem.textContent = `Got ${episodeList.length} episode(s)`;
-  const section = document.querySelector('.episode-list');
-  const template = document.getElementById("episode-template");
-  for (let episode of episodeList) {
-
-    const {name, season, number, summary} = episode;
-    const {medium} = episode.image
-    const newCard = template.content.cloneNode(true);
-
-    newCard.querySelector(".fi-title").textContent = `${formatEpisodeName(name)} ${formatEpisodeNumber(season,number)}`;
-    newCard.querySelector("img").src = medium;
-    newCard.querySelector(".fi-summary").innerHtml = summary;
-    
-    section.appendChild(newCard);
+  const component = displayMovies(episodeList,rootElem);
+  for(const element of component){
+    rootElem.append(element);
   }
 }
 
-function formatEpisodeNumber(season,number) {
-  return `\nS${season < 10 ? "0" : ""}${season}E${number < 10 ? "0" : ""}${number}`;
+function setupSearch(allEpisodes) {
+  const searchInput = document.getElementById("search-input");
+  searchInput.addEventListener('keyup', (event) => {
+    const filteredEpisodes = filterEpisodes(allEpisodes, event.target.value);
+    const rootElem = document.getElementById("root");
+    rootElem.innerHTML = "";
+    const component = displayMovies(filteredEpisodes, rootElem);
+    for (const element of component) {
+      rootElem.append(element);
+    }
+    const resultCount = document.getElementById("result-count");
+    if (resultCount) {
+      resultCount.innerText = `Displaying ${filteredEpisodes.length} / ${allEpisodes.length} episodes`;
+
+    }
+  });
+}
+function filterEpisodes(allEpisodes, searchText) {
+  return allEpisodes.filter(episode => {
+    const { name, summary } = episode;
+    const episodeName = name.toLowerCase();
+    const episodeSummary = summary.toLowerCase();
+    const searchTextLower = searchText.toLowerCase()
+    return episodeName.includes(searchTextLower) || episodeSummary.includes(searchTextLower);
+  })
+}
+function episodeSelector(allEpisodes) {
+  const select = document.getElementById("episode-selector");
+  for (const episode of allEpisodes) {
+    const opt = document.createElement("option");
+    opt.value = episode.name;
+    opt.text = episode.name;
+    select.add(opt, null);
+  }
+  select.addEventListener("change", (event) => {
+    if (event.target.value == "all-episodes") {
+      cleanDisplay();
+      makePageForEpisodes(allEpisodes);
+    } else {
+      const matchedEpisodes = filterEpisodes(allEpisodes, event.target.value);
+      cleanDisplay()
+      const component = displayMovies(matchedEpisodes);
+      const rootElem = document.getElementById("root");
+      for (const element of component) {
+        rootElem.append(element);
+      }
+    }
+  })
+}
+function cleanDisplay() {
+  const rootElem = document.getElementById("root");
+  rootElem.innerHTML = "";
+}
+function displayMovies(Episodes){
+  return Episodes.map(element => {
+    const { name, season, number, summary } = element;
+    const { medium } = element.image;
+    return movieComponent(name,season,number,summary, medium);
+  })
+}
+
+function movieComponent(name,season,number,summary, medium){
+  const movie = document.createElement("article");
+  const title = document.createElement("h3");
+  const movieSummary = document.createElement("p");
+  const movieImage = document.createElement("img");
+  
+  title.innerText = `${formatEpisodeName(name)} - ${formatEpisodeNumber(season,number)}`;
+  movieSummary.innerHTML = summary;
+  movieImage.src = medium;
+  movie.append(title,movieImage,movieSummary);
+  return movie;
 }
 function formatEpisodeName(name) {
   const maxLength = 25;
   return name.length < maxLength ? name : `${name.substring(0, maxLength - 3)}...`;
 }
-
-function filterEpisodes(episodeList,input){
-  document.querySelector(".episode-list").innerHTML =`<template id="episode-template">
-          <div class="divider">
-            <h3 class="fi-title"></h3>
-            <img class="episode-image" src="" alt="Episode Image" />
-            <div class="fi-summary"></div>
-          </div>
-        </template>`;
-    for (let episode of episodeList) {
-        const {name, season, number, summary} = episode;
-        const {medium} = episode.image;
-        const newCard = document.querySelector('#episode-template').content.cloneNode(true);
-        if((name.toUpperCase().includes(input.toUpperCase())) || (summary.toUpperCase().includes(input.toUpperCase()))){
-          newCard.querySelector(".fi-title").textContent = `${formatEpisodeName(name)} ${formatEpisodeNumber(season,number)}`;
-          newCard.querySelector("img").src = medium;
-          newCard.querySelector(".fi-summary").innerHtml = summary;
-          document.querySelector(".episode-list").append(newCard);
-          
-        }
-  }
-}
-
-function allepisodesSelect(episodes){
-  const select = document.querySelector(".ep-select");
-  const optionClone = document.querySelector(".ep-select-option").cloneNode(true);
-  const options = episodes.map(element => {
-      const optionClone = document.querySelector(".ep-select-option").cloneNode(true);
-      optionClone.innerText = `${element.name}`;
-      return optionClone
-  });
-  select.append(...options);
-} 
-async function setup() {
-  const allEpisodes = await getData();
-  makePageForEpisodes(allEpisodes); 
-
-  const inputValue = document.querySelector(".ep-search-input");
-  inputValue.addEventListener("keydown", () => {
-    filterEpisodes(allEpisodes,inputValue.value);
-  })
-  allepisodesSelect(allEpisodes);
-  
-  const selectOption = document.querySelector(".ep-select");
-  selectOption.addEventListener("change", (event) => {
-    if (event.target.value == 'All Episodes') {
-      makePageForEpisodes(allEpisodes);
-    }else{
-      filterEpisodes(allEpisodes,event.target.value);
-    }
-  });
+function formatEpisodeNumber(season, number) {
+  return `\nS${season < 10 ? "0" : ""}${season}E${number < 10 ? "0" : ""}${number}`;
 }
 
 window.onload = setup;

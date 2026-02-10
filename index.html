@@ -9,48 +9,27 @@
   </head>
 
   <body>
-    <div id="root"></div>
-    <main class="main-content">
-      <header class="page-header">
-        <h1 class="page-title">TV Show Project</h1>
-        <p class="page-description">
-          A collection of my favorite TV show episodes
-        </p>
-        <div class="search-options">
-          <label>
-            Quick Ref:
-            <select class="ep-select">
-              <option class="ep-select-option">All Episodes</option>
-            </select>
-          </label>
-          <label class="ep-search">
-            <input
-              type="text"
-              placeholder="Search..."
-              class="ep-search-input"
-            />
-          </label>
-        </div>
-      </header>
-      <section class="episode-list">
-        <template id="episode-template">
-          <div class="divider">
-            <h3 class="fi-title"></h3>
-            <img class="episode-image" src="" alt="Episode Image" />
-            <div class="fi-summary"></div>
-          </div>
-        </template>
-      </section>
-      <footer class="page-footer">
-        <p>
-          The data has (originally) come from
-          <a href="https://tvmaze.com/">TVMaze.com</a>
-        </p>
-      </footer>
-    </main>
+    <header class="header">
+      <h1>TV Show Project</h1>
+      <div class="episode-div" id="episode-div">
+        <select id="episode-selector">
+          <option value="all-episodes">All episodes</option>
+        </select>
+        <label>
+          <p id="search-p">Search</p>
+          <input
+            type="search"
+            id="search-input"
+            name="search-input"
+            placeholder="Search..."
+          />
+        </label>
+        <div id="result-count"></div>
+      </div>
+    </header>
+    <section id="root"></section>
 
     <!-- Loads a provided function called getAllEpisodes() which returns all episodes -->
-    <script type="module" src="episodes.js"></script>
 
     <!-- Loads YOUR javascript code -->
     <script type="module" src="script.js"></script>
