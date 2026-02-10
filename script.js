@@ -1,7 +1,18 @@
 import { getData } from "./app.js";
 
 async function setup() {
+  const loading = document.getElementById("loading");
+  const errorBox = document.getElementById("error");
+  loading.style.display = "block";  
   const allEpisodes = await getData();
+  loading.style.display = "none";
+
+  if (!allEpisodes) {
+    errorBox.style.display = "grid";
+    errorBox.textContent = "Oops — couldn't load the episodes. Please refresh.";
+    return;
+  }
+
   makePageForEpisodes(allEpisodes);
   setupSearch(allEpisodes);
   episodeSelector(allEpisodes);
@@ -68,12 +79,13 @@ function cleanDisplay() {
   const rootElem = document.getElementById("root");
   rootElem.innerHTML = "";
 }
-function displayMovies(Episodes){
-  return Episodes.map(element => {
-    const { name, season, number, summary } = element;
-    const { medium } = element.image;
-    return movieComponent(name,season,number,summary, medium);
-  })
+function displayMovies(Episodes) {
+  const useOriginalImage = Episodes.length === 1;
+  return Episodes.map(episode => {
+    const { name, season, number, summary, image } = episode;
+    const img = useOriginalImage ? image.original : image.medium;
+    return movieComponent(name, season, number, summary, img);
+  });
 }
 
 function movieComponent(name,season,number,summary, medium){

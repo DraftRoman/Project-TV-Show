@@ -40,7 +40,17 @@ h1 {
   margin: 0.4rem auto 0.6rem auto;
 
 }
+#loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#error {
+  display: none;
+  place-items: center;
+  color: red;
 
+}
 .controls {
   max-width: 68.75rem;
   margin: 0 auto;
