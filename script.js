@@ -5,6 +5,7 @@ async function setup() {
   const errorBox = document.getElementById("error");
   loading.style.display = "block";  
   const allEpisodes = await getData();
+  console.log(allEpisodes)
   loading.style.display = "none";
 
   if (!allEpisodes) {
@@ -88,7 +89,7 @@ function displayMovies(Episodes) {
   });
 }
 
-function movieComponent(name,season,number,summary, medium){
+function movieComponent(name,season,number,summary, img){
   const movie = document.createElement("article");
   const title = document.createElement("h3");
   const movieSummary = document.createElement("p");
@@ -96,7 +97,8 @@ function movieComponent(name,season,number,summary, medium){
   
   title.innerText = `${formatEpisodeName(name)} - ${formatEpisodeNumber(season,number)}`;
   movieSummary.innerHTML = summary;
-  movieImage.src = medium;
+  movieImage.src = img;
+  movieImage.setAttribute("alt", title.innerText);
   movie.append(title,movieImage,movieSummary);
   return movie;
 }
