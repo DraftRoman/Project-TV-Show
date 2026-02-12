@@ -1,13 +1,22 @@
-import { getData } from "./app.js";
+import { getData, getdataShow} from "./app.js";
 
 async function setup() {
   const loading = document.getElementById("loading");
   const errorBox = document.getElementById("error");
-  loading.style.display = "block";  
-  const allEpisodes = await getData();
-  console.log(allEpisodes)
-  loading.style.display = "none";
+  loading.style.display = "block";
+  let allEpisodes = await getData(1);
+    const shows = await getdataShow();
+    const showSelect = document.querySelector("#show-selector");
+        showSelect.addEventListener("change", async(event)=> {
+          for(let i=0;i<shows.length;i++){
+            if(event.target.value === shows[i].name){
+               allEpisodes = await getData(shows[i].id);
+               makePageForEpisodes(allEpisodes);
+            }
+         }
+    });
 
+  loading.style.display = "none";
   if (!allEpisodes) {
     errorBox.style.display = "grid";
     errorBox.textContent = "Oops — couldn't load the episodes. Please refresh.";
@@ -21,6 +30,7 @@ async function setup() {
 
 function makePageForEpisodes(episodeList) {
   const rootElem = document.getElementById("root");
+  rootElem.innerHTML = `<section id="root"></section>`;
   const component = displayMovies(episodeList,rootElem);
   for(const element of component){
     rootElem.append(element);
