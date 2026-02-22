@@ -79,6 +79,15 @@ h1 {
   color: var(--bb-text);
 }
 
+#show-selector {
+    width: 100%;
+  padding: 0.6rem 0.75rem;
+  border-radius: 0.4rem;
+  border: 1px solid var(--bb-border);
+  background: var(--bb-card);
+  color: var(--bb-text);
+}
+
 #result-count {
   max-width: 68.75rem;
   margin: 0.6rem auto 0;

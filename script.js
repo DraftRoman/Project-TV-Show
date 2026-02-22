@@ -12,6 +12,8 @@ async function setup() {
             if(event.target.value === shows[i].name){
                allEpisodes = await getData(shows[i].id);
                makePageForEpisodes(allEpisodes);
+               setupSearch(allEpisodes);
+               episodeSelector(allEpisodes);
             }
          }
     });
@@ -30,7 +32,16 @@ async function setup() {
 
 function makePageForEpisodes(episodeList) {
   const rootElem = document.getElementById("root");
-  rootElem.innerHTML = `<section id="root"></section>`;
+  rootElem.innerHTML = `    <section id="root">
+      <div id="loading">🧪 Cooking up the episode list…</div>
+      <div id="error"></div>
+    </section>`;
+      loading.style.display = "none";
+  if (!episodeList) {
+    errorBox.style.display = "grid";
+    errorBox.textContent = "Oops — couldn't load the episodes. Please refresh.";
+    return;
+  }
   const component = displayMovies(episodeList,rootElem);
   for(const element of component){
     rootElem.append(element);
