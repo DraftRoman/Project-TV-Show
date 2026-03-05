@@ -35,11 +35,12 @@ function showSelector(shows) {
   }
 
 function makePageForEpisodes(episodeList) {
+  cleanDisplay();
 
-  const component = displayMovies(episodeList,rootElem);
-  for(const element of component){
+  const component = displayMovies(episodeList);
+  component.forEach(element => {
     rootElem.append(element);
-  }
+  });
 }
 
 function setupSearch(allEpisodes) {
@@ -70,26 +71,23 @@ function filterEpisodes(allEpisodes, searchText) {
 }
 function episodeSelector(allEpisodes) {
   const select = document.getElementById("episode-selector");
-  for (const episode of allEpisodes) {
+
+  allEpisodes.forEach(ep => {
     const opt = document.createElement("option");
-    opt.value = episode.name;
-    opt.text = episode.name;
-    select.add(opt, `${episode.name} - S${episode.season}E${episode.number}`);
-  }
+    opt.value = ep.id;
+    opt.textContent =
+      `${ep.name} - S${ep.season.toString().padStart(2, "0")}E${ep.number.toString().padStart(2, "0")}`;
+
+    select.append(opt);
+  });
 
   select.addEventListener("change", (event) => {
     if (event.target.value == "all-episodes") {
-      cleanDisplay();
       makePageForEpisodes(allEpisodes);
-    } else {
-      const matchedEpisodes = filterEpisodes(allEpisodes, event.target.value);
-      cleanDisplay()
-      const component = displayMovies(matchedEpisodes);
-      const rootElem = document.getElementById("root");
-      for (const element of component) {
-        rootElem.append(element);
-      }
+      return;
     }
+    const episode = allEpisodes.find(ep => ep.id == event.target.value);
+    makePageForEpisodes([episode]);
   })
 }
 function cleanDisplay() {
