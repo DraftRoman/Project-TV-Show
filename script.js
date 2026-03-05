@@ -1,47 +1,33 @@
-import { getData, getdataShow} from "./app.js";
+import { getEpisodes, getShows} from "./app.js";
 
 async function setup() {
   const loading = document.getElementById("loading");
   const errorBox = document.getElementById("error");
   loading.style.display = "block";
-  let allEpisodes = await getData(1);
-    const shows = await getdataShow();
-    const showSelect = document.querySelector("#show-selector");
-        showSelect.addEventListener("change", async(event)=> {
-          for(let i=0;i<shows.length;i++){
-            if(event.target.value === shows[i].name){
-               allEpisodes = await getData(shows[i].id);
-               makePageForEpisodes(allEpisodes);
-               setupSearch(allEpisodes);
-               episodeSelector(allEpisodes);
-            }
-         }
-    });
+  const shows = await getShows();
+  const showSelect = document.querySelector("#show-selector");
+  showSelect.addEventListener("change", async (event) => {
+    for (let i = 0; i < shows.length; i++) {
 
-  loading.style.display = "none";
-  if (!allEpisodes) {
-    errorBox.style.display = "grid";
-    errorBox.textContent = "Oops — couldn't load the episodes. Please refresh.";
-    return;
-  }
-
-  makePageForEpisodes(allEpisodes);
-  setupSearch(allEpisodes);
-  episodeSelector(allEpisodes);
+      if (event.target.value === shows[i].name) {
+        allEpisodes = await getEpisodes(shows[i].id);
+        makePageForEpisodes(allEpisodes);
+        setupSearch(allEpisodes);
+        episodeSelector(allEpisodes);
+      } else if (event.target.value === "all-shows") {
+        displayShows(shows);
+      }
+    }
+  });
+  
+displayShows(shows);
+// makePageForEpisodes(allEpisodes);
+// setupSearch(allEpisodes);
+// episodeSelector(allEpisodes);
 }
 
 function makePageForEpisodes(episodeList) {
-  const rootElem = document.getElementById("root");
-  rootElem.innerHTML = `    <section id="root">
-      <div id="loading">🧪 Cooking up the episode list…</div>
-      <div id="error"></div>
-    </section>`;
-      loading.style.display = "none";
-  if (!episodeList) {
-    errorBox.style.display = "grid";
-    errorBox.textContent = "Oops — couldn't load the episodes. Please refresh.";
-    return;
-  }
+
   const component = displayMovies(episodeList,rootElem);
   for(const element of component){
     rootElem.append(element);
@@ -109,6 +95,41 @@ function displayMovies(Episodes) {
     return movieComponent(name, season, number, summary, img);
   });
 }
+function displayShows(Shows) {
+  cleanDisplay();
+  const showCard = Shows.map(show => {
+    renderShowCard(show);
+  });
+}
+function renderShowCard(show) {  const rootElem = document.getElementById("root");
+  const { name, image, summary, averageRuntime, genres, rating, url } = show;
+  
+  console.log(show);
+  const showElement = document.createElement("article");
+  const title = document.createElement("h3");
+  const ratingElement = document.createElement("p");
+
+  const detailsElement = document.createElement("div");
+  const genresElement = document.createElement("p");
+  const runTimeElement = document.createElement("p");
+  const linkElement = document.createElement("a");
+  detailsElement.append(genresElement , runTimeElement, ratingElement);
+  genresElement.innerText = `Genres: ${genres.join(", ")}`;
+  runTimeElement.innerText = `Run Time: ${averageRuntime} minutes`;
+
+  linkElement.href = url;
+  linkElement.innerText = "View Details";
+  ratingElement.innerText = `Rating: ${rating.average || "N/A"}`;
+  const showSummary = document.createElement("p");
+  const showImage = document.createElement("img");
+  title.innerText = name;
+  showSummary.innerHTML = summary;
+  showImage.src = image.medium;
+  showImage.setAttribute("alt", name);
+  showElement.append(title, showImage, showSummary, detailsElement, linkElement);
+  rootElem.append(showElement);
+}
+
 
 function movieComponent(name,season,number,summary, img){
   const movie = document.createElement("article");
