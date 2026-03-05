@@ -1,30 +1,38 @@
-import { getEpisodes, getShows} from "./app.js";
+import { getEpisodes, getShows } from "./app.js";
+
+let allEpisodes = [];
+const rootElem = document.getElementById("root");
+
 
 async function setup() {
   const loading = document.getElementById("loading");
-  const errorBox = document.getElementById("error");
   loading.style.display = "block";
   const shows = await getShows();
-  const showSelect = document.querySelector("#show-selector");
-  showSelect.addEventListener("change", async (event) => {
-    for (let i = 0; i < shows.length; i++) {
-
-      if (event.target.value === shows[i].name) {
-        allEpisodes = await getEpisodes(shows[i].id);
-        makePageForEpisodes(allEpisodes);
-        setupSearch(allEpisodes);
-        episodeSelector(allEpisodes);
-      } else if (event.target.value === "all-shows") {
-        displayShows(shows);
-      }
-    }
-  });
-  
-displayShows(shows);
-// makePageForEpisodes(allEpisodes);
-// setupSearch(allEpisodes);
-// episodeSelector(allEpisodes);
+  loading.style.display = "none";
+  displayShows(shows);
+  showSelector(shows);
 }
+
+function showSelector(shows) {
+  const showSelect = document.querySelector("#show-selector");
+  shows.forEach(show => {
+    const opt = document.createElement("option");
+    opt.value = show.id;
+    opt.textContent = show.name;
+    showSelect.append(opt);
+  });
+  showSelect.addEventListener("change", async (event) => {
+    const showId = event.target.value;
+    if (showId === "all-shows") {
+      displayShows(shows);
+      return;
+    }
+    allEpisodes = await getEpisodes(showId);
+    makePageForEpisodes(allEpisodes);
+    setupSearch(allEpisodes);
+    episodeSelector(allEpisodes);
+  })
+  }
 
 function makePageForEpisodes(episodeList) {
 
@@ -66,8 +74,9 @@ function episodeSelector(allEpisodes) {
     const opt = document.createElement("option");
     opt.value = episode.name;
     opt.text = episode.name;
-    select.add(opt, null);
+    select.add(opt, `${episode.name} - S${episode.season}E${episode.number}`);
   }
+
   select.addEventListener("change", (event) => {
     if (event.target.value == "all-episodes") {
       cleanDisplay();
@@ -101,32 +110,37 @@ function displayShows(Shows) {
     renderShowCard(show);
   });
 }
-function renderShowCard(show) {  const rootElem = document.getElementById("root");
+function renderShowCard(show) {  
   const { name, image, summary, averageRuntime, genres, rating, url } = show;
   
-  console.log(show);
   const showElement = document.createElement("article");
+
+  const titleDiv = document.createElement('div');
+  titleDiv.classList.add('show-title');
   const title = document.createElement("h3");
   const ratingElement = document.createElement("p");
+  titleDiv.append(title, ratingElement);
+
+  
+  title.innerText = name;
+  ratingElement.innerText = `Rating: ${rating.average || "N/A"}`;
 
   const detailsElement = document.createElement("div");
   const genresElement = document.createElement("p");
   const runTimeElement = document.createElement("p");
   const linkElement = document.createElement("a");
-  detailsElement.append(genresElement , runTimeElement, ratingElement);
+  detailsElement.append(genresElement, runTimeElement);
   genresElement.innerText = `Genres: ${genres.join(", ")}`;
   runTimeElement.innerText = `Run Time: ${averageRuntime} minutes`;
 
   linkElement.href = url;
   linkElement.innerText = "View Details";
-  ratingElement.innerText = `Rating: ${rating.average || "N/A"}`;
   const showSummary = document.createElement("p");
   const showImage = document.createElement("img");
-  title.innerText = name;
   showSummary.innerHTML = summary;
   showImage.src = image.medium;
   showImage.setAttribute("alt", name);
-  showElement.append(title, showImage, showSummary, detailsElement, linkElement);
+  showElement.append(titleDiv, showImage, showSummary, detailsElement, linkElement);
   rootElem.append(showElement);
 }
 

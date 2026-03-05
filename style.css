@@ -94,7 +94,12 @@ h1 {
   font-size: 0.85rem;
   color: var(--bb-muted);
 }
-
+.show-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
 
 article {
   background: var(--bb-card);
