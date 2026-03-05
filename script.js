@@ -8,6 +8,7 @@ async function setup() {
   const loading = document.getElementById("loading");
   loading.style.display = "block";
   const shows = await getShows();
+  shows.sort((a, b) => a.name.localeCompare(b.name));
   loading.style.display = "none";
   displayShows(shows);
   showSelector(shows);
@@ -64,13 +65,18 @@ function filterEpisodes(allEpisodes, searchText) {
   return allEpisodes.filter(episode => {
     const { name, summary } = episode;
     const episodeName = name.toLowerCase();
-    const episodeSummary = summary.toLowerCase();
+    const episodeSummary = (summary || "").toLowerCase();
     const searchTextLower = searchText.toLowerCase()
     return episodeName.includes(searchTextLower) || episodeSummary.includes(searchTextLower);
   })
 }
 function episodeSelector(allEpisodes) {
   const select = document.getElementById("episode-selector");
+  select.innerHTML = ""
+  const everyEpisode = document.createElement("option");
+  everyEpisode.value = "all-episodes"
+  everyEpisode.textContent = "All episodes"
+  select.append(everyEpisode);
 
   allEpisodes.forEach(ep => {
     const opt = document.createElement("option");
@@ -86,7 +92,8 @@ function episodeSelector(allEpisodes) {
       makePageForEpisodes(allEpisodes);
       return;
     }
-    const episode = allEpisodes.find(ep => ep.id == event.target.value);
+    const episode = allEpisodes.find(ep => ep.id == Number(event.target.value))
+    if (!episode) return;
     makePageForEpisodes([episode]);
   })
 }
@@ -102,9 +109,9 @@ function displayMovies(Episodes) {
     return movieComponent(name, season, number, summary, img);
   });
 }
-function displayShows(Shows) {
+function displayShows(shows) {
   cleanDisplay();
-  const showCard = Shows.map(show => {
+  shows.forEach(show => {
     renderShowCard(show);
   });
 }
@@ -149,7 +156,7 @@ function movieComponent(name,season,number,summary, img){
   const movieSummary = document.createElement("p");
   const movieImage = document.createElement("img");
   
-  title.innerText = `${formatEpisodeName(name)} - ${formatEpisodeNumber(season,number)}`;
+  title.innerText = `${formatEpisodeName(name)} ${formatEpisodeNumber(season,number)}`;
   movieSummary.innerHTML = summary;
   movieImage.src = img;
   movieImage.setAttribute("alt", title.innerText);
