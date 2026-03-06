@@ -40,6 +40,26 @@ h1 {
   margin: 0.4rem auto 0.6rem auto;
 
 }
+.episode-div {
+  max-width: 68.75rem;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  justify-content: center;
+  align-items: flex-end;
+
+}
+.episode-div label {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.75rem;
+  color: var(--bb-muted);
+}
+#search-input {
+  min-width: 12rem;
+  flex: 1;
+}
 #loading {
   display: flex;
   align-items: center;
@@ -67,9 +87,6 @@ h1 {
   color: var(--bb-text);
   font-size: 0.95rem;
 }
-#search-p {
-  margin: 0.4rem;
-}
 #episode-selector {
   width: 100%;
   padding: 0.6rem 0.75rem;
@@ -79,14 +96,7 @@ h1 {
   color: var(--bb-text);
 }
 
-#show-selector {
-    width: 100%;
-  padding: 0.6rem 0.75rem;
-  border-radius: 0.4rem;
-  border: 1px solid var(--bb-border);
-  background: var(--bb-card);
-  color: var(--bb-text);
-}
+
 
 #result-count {
   max-width: 68.75rem;
@@ -139,20 +149,22 @@ article p {
   color: var(--bb-muted);
 }
 
-#search-input,
-#episode-selector {
-  box-sizing: border-box;
-  line-height: 1.2;
-  min-height: 2.3rem;
-  padding: 0.6rem 0.75rem;
+#show-selector,
+#episode-selector,
+#search-input {
+  padding: 0.45rem 0.6rem;
+  border-radius: 0.4rem;
+  border: 1px solid var(--bb-border);
+  background: var(--bb-card);
+  color: var(--bb-text);
+  font-size: 0.85rem;
 }
-#search-input,
-#episode-selector {
-  box-sizing: border-box;
-  line-height: 1.2;
-  min-height: 2.3rem;
-  padding: 0.6rem 0.75rem;
+#result-count {
+  font-size: 0.8rem;
+  color: var(--bb-muted);
+  white-space: nowrap;
 }
+
 
 @media (min-width: 68.75rem) {
   .controls {
@@ -163,4 +175,20 @@ article p {
   #episode-selector {
     height: 2.3rem;
   }
+}
+@media (max-width: 600px) {
+
+  .episode-div {
+    justify-content: stretch;
+  }
+
+  .episode-div label {
+    flex: 1 1 100%;
+  }
+
+  #result-count {
+    width: 100%;
+    text-align: center;
+  }
+
 }

@@ -12,6 +12,7 @@ async function setup() {
   loading.style.display = "none";
   displayShows(shows);
   showSelector(shows);
+  setupSearch(shows, "shows");
 }
 
 function showSelector(shows) {
@@ -24,13 +25,16 @@ function showSelector(shows) {
   });
   showSelect.addEventListener("change", async (event) => {
     const showId = event.target.value;
+    const searchInput = document.getElementById("search-input");
+    searchInput.value = ""; 
     if (showId === "all-shows") {
       displayShows(shows);
+      setupSearch(shows,"shows");
       return;
     }
     allEpisodes = await getEpisodes(showId);
     makePageForEpisodes(allEpisodes);
-    setupSearch(allEpisodes);
+    setupSearch(allEpisodes,"episodes")
     episodeSelector(allEpisodes);
   })
   }
@@ -44,22 +48,36 @@ function makePageForEpisodes(episodeList) {
   });
 }
 
-function setupSearch(allEpisodes) {
+function setupSearch(data,type) {
   const searchInput = document.getElementById("search-input");
+  const resultCount = document.getElementById("result-count");
+  searchInput.value = ""; 
+  
   searchInput.addEventListener('keyup', (event) => {
-    const filteredEpisodes = filterEpisodes(allEpisodes, event.target.value);
-    const rootElem = document.getElementById("root");
-    rootElem.innerHTML = "";
-    const component = displayMovies(filteredEpisodes, rootElem);
-    for (const element of component) {
-      rootElem.append(element);
-    }
-    const resultCount = document.getElementById("result-count");
-    if (resultCount) {
-      resultCount.innerText = `Displaying ${filteredEpisodes.length} / ${allEpisodes.length} episodes`;
+    
+    const searchText = event.target.value.toLowerCase();
+    let filtered;
+    if (type === "shows") {
+      filtered = data.filter(show => {
+        const name = show.name.toLowerCase();
+        const summary = (show.summary || "").toLowerCase();
+        const genres = show.genres.join(" ").toLowerCase();
+        return (
+          name.includes(searchText) ||
+          summary.includes(searchText) ||
+          genres.includes(searchText)
+        );
+      });
+      displayShows(filtered);
 
+      resultCount.innerText = `Displaying ${filtered.length} / ${data.length} shows`;
+
+    } else {
+      filtered = filterEpisodes(data, searchText);
+      makePageForEpisodes(filtered);
+      resultCount.innerText = `Displaying ${filtered.length} / ${data.length} episodes`;
     }
-  });
+  })
 }
 function filterEpisodes(allEpisodes, searchText) {
   return allEpisodes.filter(episode => {
@@ -114,6 +132,8 @@ function displayShows(shows) {
   shows.forEach(show => {
     renderShowCard(show);
   });
+  const resultCount = document.getElementById("result-count");
+  resultCount.innerText = `Displaying ${shows.length} shows`;
 }
 function renderShowCard(show) {  
   const { name, image, summary, averageRuntime, genres, rating, url } = show;
