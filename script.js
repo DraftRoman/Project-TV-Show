@@ -13,6 +13,21 @@ async function setup() {
   displayShows(shows);
   showSelector(shows);
   setupSearch(shows, "shows");
+  setupReturnButton(shows);
+}
+
+function setupReturnButton(shows) {
+  const returnButton = document.getElementById("return-button");
+  returnButton.addEventListener("click", () => handleReturnClick(shows));
+}
+
+function handleReturnClick(shows) {
+  const freshShows = shows;
+  displayShows(freshShows);
+  showShowsSelector();
+  returnButtonHidden()
+  showEpisodeSelectorHidden();
+  document.getElementById("result-count").innerText = `Displaying ${freshShows.length} shows`;
 }
 
 function showSelector(shows) {
@@ -32,7 +47,10 @@ function showSelector(shows) {
       setupSearch(shows,"shows");
       return;
     }
+    hideShowSelector();
+    showReturnButton();
     allEpisodes = await getEpisodes(showId);
+    showEpisodeSelector();
     makePageForEpisodes(allEpisodes);
     setupSearch(allEpisodes,"episodes")
     episodeSelector(allEpisodes);
@@ -135,10 +153,21 @@ function displayShows(shows) {
   const resultCount = document.getElementById("result-count");
   resultCount.innerText = `Displaying ${shows.length} shows`;
 }
-function renderShowCard(show) {  
-  const { name, image, summary, averageRuntime, genres, rating, url } = show;
+function renderShowCard(show) {
+  const { id, name, image, summary, averageRuntime, genres, rating } = show;
   
   const showElement = document.createElement("article");
+    showElement.addEventListener("click", async () => {
+    const searchInput = document.getElementById("search-input");
+    searchInput.value = "";
+    hideShowSelector();
+    showReturnButton();
+    showEpisodeSelector();
+    allEpisodes = await getEpisodes(id);
+    makePageForEpisodes(allEpisodes);
+    setupSearch(allEpisodes, "episodes");
+    episodeSelector(allEpisodes);
+    });
 
   const titleDiv = document.createElement('div');
   titleDiv.classList.add('show-title');
@@ -153,23 +182,40 @@ function renderShowCard(show) {
   const detailsElement = document.createElement("div");
   const genresElement = document.createElement("p");
   const runTimeElement = document.createElement("p");
-  const linkElement = document.createElement("a");
   detailsElement.append(genresElement, runTimeElement);
   genresElement.innerText = `Genres: ${genres.join(", ")}`;
   runTimeElement.innerText = `Run Time: ${averageRuntime} minutes`;
 
-  linkElement.href = url;
-  linkElement.innerText = "View Details";
   const showSummary = document.createElement("p");
   const showImage = document.createElement("img");
   showSummary.innerHTML = summary;
   showImage.src = image.medium;
   showImage.setAttribute("alt", name);
-  showElement.append(titleDiv, showImage, showSummary, detailsElement, linkElement);
+  showElement.append(titleDiv, showImage, showSummary, detailsElement);
   rootElem.append(showElement);
 }
 
-
+function hideShowSelector() {
+  const showSelectorContainer = document.getElementById("show-selector-container");
+  showSelectorContainer.style.display = "none";
+}
+function showReturnButton() {
+  const btn = document.getElementById("return-button");
+  btn.style.display = "block";
+}
+function showEpisodeSelector() {
+  document.getElementById("episode-selector-container").style.display = "flex";
+}
+function showShowsSelector() {
+  document.getElementById("show-selector-container").style.display = "block"
+}
+function showEpisodeSelectorHidden() {
+  document.getElementById("episode-selector-container").style.display = "none";
+}
+function returnButtonHidden() {
+  document.getElementById("return-button").style.display = "none";
+}
+  
 function movieComponent(name,season,number,summary, img){
   const movie = document.createElement("article");
   const title = document.createElement("h3");
