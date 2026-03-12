@@ -26,10 +26,17 @@ function handleReturnClick(shows) {
   displayShows(freshShows);
   showShowsSelector();
   returnButtonHidden()
+  scrollUp()
+  setupSearch(shows,"shows");
   showEpisodeSelectorHidden();
   document.getElementById("result-count").innerText = `Displaying ${freshShows.length} shows`;
 }
 
+function scrollUp() {
+  const root = document.querySelector("body");
+  root.scrollIntoView();
+
+}
 function showSelector(shows) {
   const showSelect = document.querySelector("#show-selector");
   shows.forEach(show => {
@@ -141,7 +148,7 @@ function displayMovies(Episodes) {
   const useOriginalImage = Episodes.length === 1;
   return Episodes.map(episode => {
     const { name, season, number, summary, image } = episode;
-    const img = useOriginalImage ? image.original : image.medium;
+    const img = image ? (useOriginalImage ? image.original : image.medium) : null;
     return movieComponent(name, season, number, summary, img);
   });
 }
@@ -159,19 +166,20 @@ function renderShowCard(show) {
   const showElement = document.createElement("article");
     showElement.addEventListener("click", async () => {
     const searchInput = document.getElementById("search-input");
-    searchInput.value = "";
-    hideShowSelector();
-    showReturnButton();
-    showEpisodeSelector();
-    allEpisodes = await getEpisodes(id);
-    makePageForEpisodes(allEpisodes);
-    setupSearch(allEpisodes, "episodes");
-    episodeSelector(allEpisodes);
+      searchInput.value = "";
+      scrollUp();
+      hideShowSelector();
+      showReturnButton();
+      showEpisodeSelector();
+      allEpisodes = await getEpisodes(id);
+      makePageForEpisodes(allEpisodes);
+      setupSearch(allEpisodes, "episodes");
+      episodeSelector(allEpisodes);
     });
 
   const titleDiv = document.createElement('div');
   titleDiv.classList.add('show-title');
-  const title = document.createElement("h3");
+  const title = document.createElement("h2");
   const ratingElement = document.createElement("p");
   titleDiv.append(title, ratingElement);
 
@@ -218,7 +226,7 @@ function returnButtonHidden() {
   
 function movieComponent(name,season,number,summary, img){
   const movie = document.createElement("article");
-  const title = document.createElement("h3");
+  const title = document.createElement("h2");
   const movieSummary = document.createElement("p");
   const movieImage = document.createElement("img");
   

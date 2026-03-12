@@ -13,21 +13,27 @@
   </head>
 
   <body>
-    <header class="header">
+    <header class="header" role="navigation">
       <h1>TV Show Project</h1>
+
       <div class="episode-div" id="episode-div">
-        <label>
-          <p class="selector-show">Show selector</p>
-          <select id="show-selector">
-            <option value="all-shows">All shows</option>
-          </select>
-        </label>
-        <label>
-          <p class="selector-p">Episode selector</p>
-          <select id="episode-selector">
-            <option value="all-episodes">All episodes</option>
-          </select>
-        </label>
+        <button id="return-button"><<</button>
+        <div id="show-selector-container">
+          <label>
+            <p class="selector-show">Show selector</p>
+            <select id="show-selector">
+              <option value="all-shows">All shows</option>
+            </select>
+          </label>
+        </div>
+        <div id="episode-selector-container">
+          <label>
+            <p class="selector-p">Episode selector</p>
+            <select id="episode-selector">
+              <option value="all-episodes">All episodes</option>
+            </select>
+          </label>
+        </div>
         <label>
           <p id="search-p">Search</p>
           <input
@@ -40,7 +46,7 @@
         <div id="result-count"></div>
       </div>
     </header>
-    <section id="root">
+    <section id="root" role="main">
       <div id="loading">🧪 Cooking up the episode list…</div>
       <div id="error"></div>
     </section>
@@ -48,6 +54,14 @@
     <!-- Loads a provided function called getAllEpisodes() which returns all episodes -->
 
     <!-- Loads YOUR javascript code -->
+    <footer role="contentinfo">
+      <p>
+        <a href="https://www.tvmaze.com/api" class="link" target="_blank"
+          >TV shows</a
+        >
+        Presented by Roman with love
+      </p>
+    </footer>
     <script type="module" src="script.js"></script>
   </body>
 </html>
